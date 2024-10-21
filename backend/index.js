@@ -14,6 +14,8 @@ connection('mongodb://localhost:27017/Chatapp').then(()=>{
 
 // Import file
 const User = require('./model/user');
+const UserConerstion = require('./model/userConverstion');
+const Massager = require('./model/message');
 
 // Routes
 
@@ -76,6 +78,28 @@ app.post('/api/loginuser', async (req,res, next)=>{
     } catch (error) {
         return res.status(500).send("Internal Sever Error", error);
     }
+});
+
+// Conversasssion Routes
+app.post('/api/conversassion' ,async (req,res,next)=>{
+    try {
+        const {senderId , receverId}=req.body;
+        const newConversation = new UserConerstion({members: senderId ,receverId});
+        await newConversation.save();
+        res.status(200).send("Conversation is created Successfully")
+    } catch (error) {
+        res.status(500).send("Internal Server Error" , error);
+    }
+});
+
+app.get('./api/conversassion/:userId' , async(req,res)=>{
+   try {
+        const userId = req.params.userId;
+        const converSassion = await UserConerstion.find({members:{$in: {userId}}});
+        res.status(200).send(converSassion)
+   } catch (error) {
+      res.status(500).send("Internal Server Error");
+   }
 })
 
 // Middleware express pakage
