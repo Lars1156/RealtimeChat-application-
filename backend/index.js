@@ -107,7 +107,15 @@ app.get('./api/conversassion/:userId' , async(req,res)=>{
       res.status(500).send("Internal Server Error");
    }
 });
-
+// Get the all user Status to the UI
+app.get('/api/users', async(req,res)=>{
+    try {
+          const users =  await User.find();
+          res.status(200).json(users);
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
+})
 app.post('/api/message', async (req,res,next)=>{
    try {
     const {conversationId ,senderId ,message}= req.body;
