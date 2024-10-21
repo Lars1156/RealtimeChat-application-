@@ -74,7 +74,7 @@ app.post('/api/loginuser', async (req,res, next)=>{
         }
 
     } catch (error) {
-        return res.status(500).send("Internal Sever Error");
+        return res.status(500).send("Internal Sever Error", error);
     }
 })
 
