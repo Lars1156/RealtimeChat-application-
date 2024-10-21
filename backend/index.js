@@ -1,6 +1,7 @@
 const express = require('express')
 const {connection }= require('./connection');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const app = express()
 const port = 5001;
 
@@ -41,7 +42,27 @@ app.post('/api/register', async (req, res, next)=>{
         }
 
     } catch (error) {
-        
+        return res.status(500).send("Internal Sever Error");
+    }
+})
+
+// Login Routes
+app.post('/api/loginuser', async (req,res)=>{
+    try {
+        const{email , password} = req.body;
+        if (!email || !password) {
+            return res.status(401).send('please Entered the full fill User detils');
+        }else{
+            const validateUser = await User.findOne({email});
+            if(!validateUser){
+                res.status(400).send('Enter the Email and Password ');
+            }else{
+                
+            }
+        }
+
+    } catch (error) {
+        return res.status(500).send("Internal Sever Error");
     }
 })
 
