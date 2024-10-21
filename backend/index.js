@@ -117,6 +117,21 @@ app.post('/api/message', async (req,res,next)=>{
    } catch (error) {
       res.status(500).send('Internal Sever Error');
    }
+});
+// ConverSession message Reciver to the recived 
+
+app.get('/api/message/conversationId', async(req,res)=>{
+    try {
+          const conversationId = req.params.conversationId;
+          const messages = await Messager. find({conversationId});
+          const messagerData = Promise.all(messages.map(async(message)=>{
+          const user = await User.findById(message.senderId);
+          return {user: {email: user.email , userName : user.useName}, message : message.message};
+          }));
+          res.status(200).json(messagerData);
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 // Middleware express pakage
