@@ -1,18 +1,31 @@
 const mongoose = require('mongoose');
-const { type } = require('os');
 
+// Define the Message schema
 const messageSchema = new mongoose.Schema({
-    converSessionId:{
-        type:String,
-
-    },
-    senderId:{
-        type:String
-    },
-    message:{
-        type:String
-    }
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  conversationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Conversation', // Referencing the Conversation schema
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
-const Messager = mongoose.model('Messager', messageSchema);
-module.exports = Messager
+const Message = mongoose.model('Message', messageSchema);
+module.exports = Message;

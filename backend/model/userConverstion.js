@@ -1,13 +1,28 @@
 const mongoose = require('mongoose');
-const { type } = require('os');
 
-const userConversationSchema = new mongoose.Schema({
-    members: {
-        type:Array,
-        required:true
-    },
-    
+// Define the Conversation schema
+const conversationSchema = new mongoose.Schema({
+  participants: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }
+  ],
+  lastMessage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Message',
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
-const UserConversation  =  mongoose.model('UserConversation ', userConversationSchema);
-module.exports = UserConversation
+// Update the 'updatedAt' field whenever a new message is added
+conversationSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+const Conversation = mongoose.model('Conversation', conversationSchema);
+module.exports = Conversation;
