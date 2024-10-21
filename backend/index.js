@@ -16,6 +16,7 @@ connection('mongodb://localhost:27017/Chatapp').then(()=>{
 const User = require('./model/user');
 const UserConerstion = require('./model/userConverstion');
 const Massager = require('./model/message');
+const Messager = require('./model/message');
 
 // Routes
 
@@ -95,10 +96,26 @@ app.post('/api/conversassion' ,async (req,res,next)=>{
 app.get('./api/conversassion/:userId' , async(req,res)=>{
    try {
         const userId = req.params.userId;
-        const converSassion = await UserConerstion.find({members:{$in: {userId}}});
-        res.status(200).send(converSassion)
+        const converSassion = await UserConerstion.find({members:{$in: [userId]}});
+        const conversationList= converSassion.map( async(converSassion)=>{
+            const reciverId = converSassion.members.find((member)=> member !== userId)
+            const user =  await User.findById(reciverId);
+            return {user: {email : user.email , userName : user.useName}, conversationId: user.conversationId._id}
+        })
+        res.status(200).json(conversationList);
    } catch (error) {
       res.status(500).send("Internal Server Error");
+   }
+});
+
+app.post('/api/message', async (req,res,next)=>{
+   try {
+    const {conversationId ,senderId ,message}= req.body;
+    const newMessage = new Messager({conversationId , senderId , message});
+    await newMessage.save()
+    res.status(200).send('Message Send Sucessfully');
+   } catch (error) {
+      res.status(500).send('Internal Sever Error');
    }
 })
 
