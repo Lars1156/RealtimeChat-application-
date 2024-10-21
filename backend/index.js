@@ -34,7 +34,7 @@ app.post('/api/register', async (req, res, next)=>{
             bcrypt.hash(password, 10 ,(err, hashedPassword)=>{
                  newUser.set('password', hashedPassword);
                  newUser.save();
-                 next();
+                 next(); 
             })
          }
            return res.status(200). send("User is Registerd Successfully ");
