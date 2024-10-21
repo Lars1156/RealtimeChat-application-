@@ -110,14 +110,16 @@ app.get('./api/conversassion/:userId' , async(req,res)=>{
 
 app.post('/api/message', async (req,res,next)=>{
    try {
-    const {conversationId ,senderId ,message}= req.body;
+    const {conversationId ,senderId ,message , receverId = ''}= req.body;
     if( !senderId || !message) return res.status(400).send('please Filledd allarequried Feild');
-    if(!conversationId){
-        const newConversation = new UserConerstion({members:[senderId]});
+    if(!conversationId && receverId){
+        const newConversation = new UserConerstion({members:[senderId, receverId]});
         await newConversation.save();
         const newMessage = new Massager({conversationId : newConversation._id ,senderId ,message});
         await newMessage.save();
         return res.status(200).send('mesaage Send Successsfuly');
+    }else{
+        return res.status(400).send('Please fill the all requried File')
     }
     const newMessage = new Messager({conversationId , senderId , message});
     await newMessage.save()
@@ -131,7 +133,7 @@ app.post('/api/message', async (req,res,next)=>{
 app.get('/api/message/conversationId', async(req,res)=>{
     try {
           const conversationId = req.params.conversationId;
-          if(!conversationId) return res.status(200).json([]);
+          if(!conversationId=== 'new') return res.status(200).json([]);
           const messages = await Messager. find({conversationId});
           const messagerData = Promise.all(messages.map(async(message)=>{
           const user = await User.findById(message.senderId);
