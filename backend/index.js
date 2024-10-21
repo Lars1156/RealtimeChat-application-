@@ -47,17 +47,29 @@ app.post('/api/register', async (req, res, next)=>{
 })
 
 // Login Routes
-app.post('/api/loginuser', async (req,res)=>{
+app.post('/api/loginuser', async (req,res, next)=>{
     try {
         const{email , password} = req.body;
         if (!email || !password) {
             return res.status(401).send('please Entered the full fill User detils');
         }else{
-            const validateUser = await User.findOne({email});
-            if(!validateUser){
-                res.status(400).send('Enter the Email and Password ');
+            const user = await User.findOne({email});
+            if(!user){
+                res.status(400).send('User email And Password is Inncorrect');
             }else{
-                
+                const paylod ={
+                   userId : user.id,
+                   email : user.email
+                }
+                const secret = "Kishan@1156";
+                jwt.sign(paylod, secret,{expiresIn:"2h"}, async function(err, token){
+                  await User.updateOne({_id: user._id},{
+                    $set: {token}
+                  })
+                  user.save();
+                  next();
+                })
+                res.status(200).json({user:{email: user.email , userName: user.useName },token : user.token});
             }
         }
 
