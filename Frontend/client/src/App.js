@@ -1,10 +1,10 @@
-
-import './App.css';
+import {Router , Routes} from 'react-router-dom'
+import CustomNavbar from './components/Navbar';
 
 function App() {
   return (
     <div className="App">
-      <h1>Hii this is Realtime Chat Application</h1>
+    
     </div>
   );
 }
