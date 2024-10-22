@@ -14,3 +14,5 @@ router.get('/getMessage/:conversationId',authMiddleware,messageController.getMes
 
 router.post('/crateConversation' , authMiddleware , conversationController.createConversation);
 router.get('/getConversation' , authMiddleware , conversationController.getUserConversations);
+
+module.exports = router;
