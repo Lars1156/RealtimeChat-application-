@@ -3,7 +3,8 @@ const userServices = require('../services/userServices');
 const register = async(req,res)=>{
     try {
         const { username, email, password } = req.body;
-        const token = await userServices.registerUser(username, email, password);
+        console.log("User details" , req.body);
+        const result = await userServices.registerUser(username ,email, password);
         res.json({ token });
     } catch (error) {
         return res.status(400).json('Internal Server Error');
