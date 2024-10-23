@@ -3,13 +3,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const secret = 'Kishan@1156';
 
-const registerUser = async (userName, email, password) =>{
+const registerUser = async (username, email, password) =>{
     const user = await User.findOne({email});
     if (user) throw new Error('User already exists');
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     user = new User({
-        userName,
+        username,
         email,
         password: hashedPassword
       });

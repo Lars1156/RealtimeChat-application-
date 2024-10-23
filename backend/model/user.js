@@ -19,15 +19,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    enum: ['online', 'offline'],
-    default: 'offline',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  }
+  // status: {
+  //   type: String,
+  //   enum: ['online', 'offline'],
+  //   default: 'offline',
+  // },
+  // createdAt: {
+  //   type: Date,
+  //   default: Date.now,
+  // }
 });
 
 // Hash the password before saving the user
